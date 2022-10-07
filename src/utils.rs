@@ -27,7 +27,8 @@ fn embed_info(channel: &String) -> Result<(String, Colour), ()> {
 
 pub async fn send_message(build: &Build) -> Result<(), SerenityError> {
     let http = Http::new("token");
-    let token = env::var("WEBHOOK_URL").expect("missing WEBHOOK_URL in .env");
+    let token =
+        env::var("DESKTOP_BUILD_WEBHOOK_URL").expect("missing DESKTOP_BUILD_WEBHOOK_URL in .env");
     let webhook = Webhook::from_url(&http, &token).await?;
 
     let (role_id, colour) = match embed_info(&build.channel) {
