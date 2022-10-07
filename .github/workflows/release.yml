@@ -26,6 +26,7 @@ jobs:
       - uses: taiki-e/upload-rust-binary-action@v1
         with:
           bin: desktop-build-ubuntu, desktop-build-windows
+          archive: app-$target
           tar: unix
           zip: windows
         env:
