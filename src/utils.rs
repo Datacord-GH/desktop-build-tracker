@@ -4,25 +4,22 @@ use std::env;
 
 use crate::models::Build;
 
-fn embed_info(channel: &String) -> Result<(String, Colour), ()> {
-    if channel == &"Stable".to_string() {
-        return Ok((
+fn embed_info(channel: &str) -> Option<(String, Colour)> {
+    match channel {
+        "Stable" => Some((
             env::var("STABLE_ROLE_ID").expect("missing STABLE_ROLE_ID in .env"),
             Colour::from_rgb(7, 180, 255),
-        ));
-    } else if channel == &"PTB".to_string() {
-        return Ok((
+        )),
+        "PTB" => Some((
             env::var("PTB_ROLE_ID").expect("missing PTB_ROLE_ID in .env"),
             Colour::from_rgb(155, 89, 182),
-        ));
-    } else if channel == &"Canary".to_string() {
-        return Ok((
+        )),
+        "Canary" => Some((
             env::var("CANARY_ROLE_ID").expect("missing CANARY_ROLE_ID in .env"),
             Colour::from_rgb(230, 126, 34),
-        ));
+        )),
+        _ => None,
     }
-
-    Err(())
 }
 
 pub async fn send_message(build: &Build) -> Result<(), SerenityError> {
@@ -32,8 +29,8 @@ pub async fn send_message(build: &Build) -> Result<(), SerenityError> {
     let webhook = Webhook::from_url(&http, &token).await?;
 
     let (role_id, colour) = match embed_info(&build.channel) {
-        Ok(data) => data,
-        Err(_) => panic!("Invalid channel provided"),
+        Some(data) => data,
+        None => panic!("Invalid channel provided"),
     };
 
     let embed_title = format!("{} update", build.channel);
