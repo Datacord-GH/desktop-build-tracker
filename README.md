@@ -2,4 +2,4 @@
 
 ## A project by Datacord
 
-> Fetche the Stable, PTB and Canary Discord versions and the hashes
+> Fetches the Stable, PTB and Canary Discord versions and the hashes
