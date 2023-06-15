@@ -22,7 +22,7 @@ docker run \
 -e PTB_ROLE_ID='REPLACE_ME' \
 -e STABLE_ROLE_ID='REPLACE_ME' \
 -e DB_URL='./db/desktop-builds.db' \
---mount type=volume,src=datacord-desktop-build-tracker,target=/desktop-build-tracker/db \
+--mount type=volume,src=datacord-desktop-builds-tracker,target=/desktop-build-tracker/db \
 --name desktop-builds-tracker \
 datacord-desktop-builds-tracker:latest
 ```
