@@ -4,13 +4,13 @@ mod utils;
 use dotenv::dotenv;
 use regex::Regex;
 use rusqlite::{Connection, Result};
-use std::collections::HashMap;
+use std::{collections::HashMap, env};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
 
-    let conn = Connection::open("builds.db")?;
+    let conn = Connection::open(env::var("DB_URL").expect("missing DB_URL in .env"))?;
 
     conn.execute(
         "CREATE TABLE IF NOT EXISTS builds (id INTEGER PRIMARY KEY, channel TEXT, build_number TEXT, build_hash TEXT, build_id TEXT)",
