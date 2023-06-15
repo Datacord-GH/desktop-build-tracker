@@ -8,11 +8,11 @@
 ## Setup and run with Docker
 
 ```docker
-docker build -t datacord-desktop-builds-tracker:latest .
+docker build -t datacord-desktop-build-tracker:latest .
 ```
 
 ```docker
-docker volume create datacord-desktop-builds-tracker
+docker volume create datacord-desktop-build-tracker
 ```
 
 ```docker
@@ -21,8 +21,8 @@ docker run \
 -e CANARY_ROLE_ID='REPLACE_ME' \
 -e PTB_ROLE_ID='REPLACE_ME' \
 -e STABLE_ROLE_ID='REPLACE_ME' \
--e DB_URL='./db/desktop-builds.db' \
---mount type=volume,src=datacord-desktop-builds-tracker,target=/desktop-build-tracker/db \
---name desktop-builds-tracker \
-datacord-desktop-builds-tracker:latest
+-e DB_URL='./db/desktop-build.db' \
+--mount type=volume,src=datacord-desktop-build-tracker,target=/desktop-build-tracker/db \
+--name desktop-build-tracker \
+datacord-desktop-build-tracker:latest
 ```
