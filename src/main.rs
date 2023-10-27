@@ -60,16 +60,32 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             continue;
         }
 
-        let js_file = match js_files.find_iter(&text).map(|mat| mat.as_str()).last() {
-            Some(value) => value,
-            None => panic!("unable to find js file"),
-        };
+        let mut build_number = String::new();
+        let mut build_hash = String::new();
+        let files = js_files
+            .find_iter(&text)
+            .map(|mat: regex::Match<'_>| mat.as_str());
 
-        let js_file_url = format!("{}{}", url, js_file);
-        let js_file_data = reqwest::get(&js_file_url).await?.text().await?;
+        for js in files {
+            let js_file_url: String = format!("{}{}", url, js);
+            let js_file_data = reqwest::get(&js_file_url).await?.text().await?;
 
-        let build_number = &build_number_rg.captures(&js_file_data).unwrap()["version"];
-        let build_hash = &build_hash_rg.captures(&js_file_data).unwrap()["hash"];
+            build_number = match &build_number_rg.captures(&js_file_data) {
+                Some(version) => version["version"].to_string(),
+                None => continue,
+            };
+            build_hash = match &build_hash_rg.captures(&js_file_data) {
+                Some(hash) => hash["hash"].to_string(),
+                None => continue,
+            };
+        }
+
+        if String::is_empty(&build_number) || String::is_empty(&build_hash) {
+            println!(
+                "[!] No build number or build hash was found during search, something is wrong!"
+            );
+            continue;
+        }
 
         let current = models::Build {
             id: 0,
@@ -94,7 +110,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("Build Number: {}", build_number);
         println!("Build Id: {}", &build_id[..7]);
         println!("Build Hash: {}", build_hash);
-        println!("File path: {}", &js_file_url);
     }
 
     Ok(())
