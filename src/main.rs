@@ -78,6 +78,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 Some(hash) => hash["hash"].to_string(),
                 None => continue,
             };
+
+            if !String::is_empty(&build_number) && !String::is_empty(&build_hash) {
+                break;
+            }
         }
 
         if String::is_empty(&build_number) || String::is_empty(&build_hash) {
